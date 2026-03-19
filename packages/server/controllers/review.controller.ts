@@ -20,4 +20,12 @@ export const reviewController = {
          res.status(500).json({ error: 'Internal server error' });
       }
    },
+   async summarizeReviews(req: Request, res: Response) {
+      const productId = Number(req.params.id);
+      if (isNaN(productId)) {
+         return res.status(400).json({ error: 'Invalid product ID' });
+      }
+      const summary = await reviewService.summerizeReviews(productId);
+      res.json({ summary });
+   },
 };
