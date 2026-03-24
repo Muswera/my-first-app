@@ -1,9 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { type Review } from '@prisma/client';
-import { reviewRepository } from '../repositories/review.repository';
+import { reviewRepository } from '../repositories/review.repository.ts';
 import { llmClient } from '../llm/client';
 import { text } from 'stream/consumers';
+
+console.log('REPO KEYS:', Object.keys(reviewRepository));
 
 const template = fs.readFileSync(
    path.join(__dirname, '..', 'prompts', 'summarize-reviews.txt'),
@@ -15,6 +17,11 @@ export const reviewService = {
       return reviewRepository.getReviews(productId);
    },
    async summerizeReviews(productId: number): Promise<string> {
+      const existingSummary =
+         await reviewRepository.getReviewSummary(productId);
+      if (existingSummary && existingSummary.expiresAt > new Date()) {
+         return existingSummary.content;
+      }
       const reviews = await reviewRepository.getReviews(productId, 10);
       reviews.map((r) => r.content).join('\n\n');
       const joinedReviews = reviews.map((r) => r.content).join('\n\n');

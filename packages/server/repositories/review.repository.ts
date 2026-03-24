@@ -2,6 +2,8 @@ import dayjs from 'dayjs';
 import prisma from '../prisma';
 import type { Review } from '@prisma/client';
 
+console.log('LOADED review.repository.ts');
+
 export const reviewRepository = {
    async getReviews(productId: number, limit?: number): Promise<Review[]> {
       return prisma.review.findMany({
@@ -23,6 +25,11 @@ export const reviewRepository = {
          where: { productId },
          create: data,
          update: data,
+      });
+   },
+   getReviewSummary(productId: number) {
+      return prisma.summary.findUnique({
+         where: { productId },
       });
    },
 };
