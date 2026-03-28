@@ -8,17 +8,22 @@ export const reviewController = {
       //const prisma = new PrismaClient();
       const productId = Number(req.params.id);
       try {
-         if (isNaN(productId))
+         if (isNaN(productId)) {
             return res.status(400).json({ error: 'Invalid product ID' });
+         }
 
          const product = await productRepository.getProduct(productId);
          if (!product) {
-            res.status(400).json({ error: 'Invalid product' });
+            res.status(404).json({ error: 'Product does not exist' });
             return;
          }
-         const reviews = await reviewService.getReviews(productId);
+         const reviews = await reviewRepository.getReviews(productId);
+         const summary = await reviewRepository.getReviewSummary(productId);
 
-         res.json(reviews);
+         res.json({
+            summary,
+            reviews,
+         });
       } catch (error) {
          console.error(
             `Error fetching reviews for product: ${productId}`,
@@ -35,9 +40,15 @@ export const reviewController = {
          }
          const product = await productRepository.getProduct(productId);
          if (!product) {
-            return res.status(400).json({ error: 'Invalid product' });
+            return res.status(404).json({ error: 'Invalid product' });
          }
          const reviews = await reviewRepository.getReviews(productId, 1);
+         if (!reviews.length) {
+            res.status(400).json({
+               error: 'There are no reviews to summarize',
+            });
+            return;
+         }
          const summary = await reviewService.summerizeReviews(productId);
          res.json({ summary });
       } catch (error) {
