@@ -49,7 +49,7 @@ export const reviewController = {
             });
             return;
          }
-         const summary = await reviewService.summerizeReviews(productId);
+         const summary = await reviewService.summarizeReviews(productId);
          res.json({ summary });
       } catch (error) {
          console.log(

@@ -3,7 +3,6 @@ import path from 'path';
 import { type Review } from '@prisma/client';
 import { reviewRepository } from '../repositories/review.repository.ts';
 import { llmClient } from '../llm/client';
-import { text } from 'stream/consumers';
 
 console.log('REPO KEYS:', Object.keys(reviewRepository));
 
@@ -13,24 +12,33 @@ const template = fs.readFileSync(
 );
 
 export const reviewService = {
-   async summerizeReviews(productId: number): Promise<string> {
+   async getReviews(productId: number): Promise<Review[]> {
+      return reviewRepository.getReviews(productId);
+   },
+   async summarizeReviews(productId: number): Promise<string> {
+      //1. check for existing catched summary
       const existingSummary =
          await reviewRepository.getReviewSummary(productId);
-      if (existingSummary) {
-         return existingSummary;
+      if (existingSummary && existingSummary.expiresAt > new Date()) {
+         console.log('Returning catched summary');
+         return existingSummary.content;
       }
+      // 2.Fetch for latest reviews
       const reviews = await reviewRepository.getReviews(productId, 10);
-      reviews.map((r) => r.content).join('\n\n');
+      if (!reviews.length) {
+         throw new Error('No reviews available to summarize');
+      }
+      // Build prompt
       const joinedReviews = reviews.map((r) => r.content).join('\n\n');
       const prompt = template.replace('{{reviews}}', joinedReviews);
-
+      // 4. Generate summary using LLM
       const { text: summary } = await llmClient.generateText({
          model: 'gpt-4.1',
          prompt,
          temperature: 0.2,
          maxTokens: 500,
       });
-
+      // 5. Store summary for caching
       await reviewRepository.storeReviewSummary(productId, summary);
       return summary;
    },
