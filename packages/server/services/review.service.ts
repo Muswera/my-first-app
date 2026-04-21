@@ -32,12 +32,7 @@ export const reviewService = {
       const joinedReviews = reviews.map((r) => r.content).join('\n\n');
       const prompt = template.replace('{{reviews}}', joinedReviews);
       // 4. Generate summary using LLM
-      const { text: summary } = await llmClient.generateText({
-         model: 'gpt-4.1',
-         prompt,
-         temperature: 0.2,
-         maxTokens: 500,
-      });
+      const summary = await llmClient.summarize(joinedReviews);
       // 5. Store summary for caching
       await reviewRepository.storeReviewSummary(productId, summary);
       return summary;
