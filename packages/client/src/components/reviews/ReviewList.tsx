@@ -1,136 +1,136 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import StarRating from './StarRating';
-import { HiSparkles } from 'react-icons/hi2';
-import { QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button } from '../ui/button';
 import { useState } from 'react';
+import { HiSparkles } from 'react-icons/hi2';
+
+import { Button } from '../ui/button';
 import ReviewSkeleton from './ReviewSkeleton';
+import StarRating from './StarRating';
+import {
+   reviewsApi,
+   type GetReviewsResponse,
+   type SummarizeResponse,
+} from './reviewsApi';
 
 type Props = {
    productId: number;
 };
 
-type Review = {
-   id: number;
-   author: string;
-   content: string;
-   rating: number;
-   createdAt: string;
-};
-type ReviewSummary = {
-   id: number;
-   productId: number;
-   content: string;
-   generatedAt: string;
-   expiresAt: string;
-};
-type GetReviewsResponse = {
-   summary: ReviewSummary | null;
-   reviews: Review[];
-};
-type SummarizeResponse = {
-   summary: string;
-};
 const ReviewList = ({ productId }: Props) => {
-   const [isSummaryLoading, setIsSummaryLoading] = useState(false);
    const queryClient = useQueryClient();
-   const [summaryError, setSummaryError] = useState('');
-   const fetchReviews = async () => {
-      const { data } = await axios.get<GetReviewsResponse>(
-         `/api/products/${productId}/reviews`
-      );
-      return data;
-   };
+   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+
    const {
       data: reviewData,
       isLoading,
+      isError,
       error,
    } = useQuery<GetReviewsResponse>({
       queryKey: ['reviews', productId],
-      queryFn: fetchReviews,
+      queryFn: () => reviewsApi.fetchReviews(productId),
    });
-   const handleSummarize = async () => {
-      try {
-         setIsSummaryLoading(true);
-         setSummaryError('');
+   const {
+      mutate: handleSummarize,
+      isPending: isSummaryLoading,
+      isError: isSummaryError,
+      error: summaryError,
+   } = useMutation<SummarizeResponse>({
+      mutationFn: () => reviewsApi.SummarizeReviews(productId),
+      onSuccess: async () => {
+         await queryClient.invalidateQueries({
+            queryKey: ['reviews', productId],
+         });
 
-         const { data } = await axios.post<SummarizeResponse>(
-            `/api/products/${productId}/reviews/summarize`
-         );
-         queryClient.setQueryData(
-            ['reviews', productId],
-            (oldData: GetReviewsResponse | undefined) => {
-               if (!oldData) return oldData;
-
-               return {
-                  ...oldData,
-                  summary: data,
-               };
-            }
-         );
-      } catch (error) {
-         console.error(error);
-         setSummaryError('Could not summarize the reviews. Try again');
-      } finally {
-         setIsSummaryLoading(false);
-      }
-   };
+         setIsSummaryOpen(true);
+      },
+   });
 
    if (isLoading) {
       return (
          <div className="flex flex-col gap-5">
-            {[1, 2, 3].map((i) => (
-               <ReviewSkeleton key={i} />
+            {[1, 2, 3].map((item) => (
+               <ReviewSkeleton key={item} />
             ))}
          </div>
       );
    }
-   if (error) {
+   if (isError) {
       console.error(error);
-      return (
-         <p className="text-red-500">Could not fetch the reviews. Try again.</p>
-      );
+
+      const errorMessage = axios.isAxiosError(error)
+         ? error.response?.data?.message || error.message
+         : 'Could not fetch reviews. Please try again';
+      return <p className="text-red-500">{errorMessage}</p>;
    }
    if (!reviewData?.reviews.length) {
-      return null;
+      return (
+         <p className="text-sm text-muted-foreground">
+            No reviews avaialble for this product
+         </p>
+      );
    }
-   const isExpired =
-      reviewData?.summary &&
-      new Date(reviewData.summary.expiresAt).getTime() < Date.now();
+   const currentSummary = reviewData.summary?.content ?? null;
+
+   const summaryErrorMessage = axios.isAxiosError(summaryError)
+      ? summaryError.response?.data?.message || summaryError.message
+      : 'Could not summarize reviews. Please try again.';
+
    return (
-      <div>
+      <div className="space-y-6">
          <div className="mb-5">
-            {reviewData?.summary && !isExpired ? (
-               <p>{reviewData.summary.content}</p>
-            ) : (
-               <div>
+            {currentSummary ? (
+               <div className="space-y-3 pl-4">
                   <Button
-                     onClick={handleSummarize}
-                     className="cursor-pointer"
-                     disabled={isSummaryLoading}
+                     type="button"
+                     variant="ghost"
+                     onClick={() => setIsSummaryOpen((prev) => !prev)}
+                     className="inline-flex items-center gap-2 rounded-md border px-4 py-2 font-semibold"
                   >
-                     <HiSparkles />
-                     Summarize
+                     <HiSparkles className="text-lg" />
+                     Review Summary
                   </Button>
-                  {isSummaryLoading && (
-                     <div className="py-3">
-                        <ReviewSkeleton />
+                  {isSummaryOpen && (
+                     <div className=" px-1 py-1">
+                        <p className="text-sm leading-6 text-muted-foreground">
+                           {currentSummary}
+                        </p>
                      </div>
                   )}
-                  {summaryError && (
-                     <p className="text-red-500">{summaryError}</p>
+               </div>
+            ) : (
+               <div className="space-y-3">
+                  <Button
+                     onClick={() => handleSummarize()}
+                     disabled={isSummaryLoading}
+                     className="cursor-pointer"
+                  >
+                     <HiSparkles className="mr-2" />
+                     {isSummaryLoading ? 'Summarizing...' : 'Summarize reviews'}
+                  </Button>
+                  {isSummaryLoading && <ReviewSkeleton />}
+                  {isSummaryError && (
+                     <p className=" text-sm text-red-500">
+                        {summaryErrorMessage}
+                     </p>
                   )}
                </div>
             )}
          </div>
-         <div className="flex flex-col gap-5">
-            {reviewData?.reviews.map((review) => (
-               <div key={review.id}>
-                  <div className="font-semibold">{review.author}</div>
+         <div className="flex flex-col gap-3">
+            {reviewData.reviews.map((review) => (
+               <div key={review.id} className="rounded-lg p-4 ">
                   <div>
-                     <StarRating value={review.rating} />
+                     <h4 className="font-semibold">{review.author}</h4>
+                     <p className="mt-1 text-xs text-muted-foreground">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                     </p>
+                     <div className="mt-2">
+                        <StarRating value={review.rating} />
+                     </div>
                   </div>
-                  <p className="py-2">{review.content}</p>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                     {review.content}
+                  </p>
                </div>
             ))}
          </div>
