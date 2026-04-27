@@ -4,14 +4,15 @@ import { conversationRespository } from '../repositories/conversation.repository
 import { llmClient } from '../llm/client';
 
 const template = fs.readFileSync(
-   path.join(__dirname, '..', 'prompts', 'chatbot.txt'),
+   path.join(__dirname, '..', 'llm', 'prompts', 'chatbot.txt'),
    'utf-8'
 );
 const parkInfo = fs.readFileSync(
-   path.join(__dirname, '..', 'prompts', 'WonderWorld.md'),
+   path.join(__dirname, '..', 'llm', 'prompts', 'WonderWorld.md'),
    'utf-8'
 );
-const instructions = template.replace('{{parkInfo} }', parkInfo);
+const instructions = template.replace('{{parkInfo}}', parkInfo);
+
 type ChatResponse = {
    id: string;
    message: string;

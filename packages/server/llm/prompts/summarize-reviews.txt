@@ -1,4 +1,3 @@
 summarize the following customer reviews into a short paragraph
-highlighting themes both positive and negative:
+highlighting themes both positive and negative.
        
-{{reviews}}

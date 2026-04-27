@@ -7,7 +7,7 @@ import { llmClient } from '../llm/client';
 console.log('REPO KEYS:', Object.keys(reviewRepository));
 
 const template = fs.readFileSync(
-   path.join(__dirname, '..', 'prompts', 'summarize-reviews.txt'),
+   path.join(__dirname, '..', 'llm', 'prompts', 'summarize-reviews.txt'),
    'utf-8'
 );
 
@@ -30,9 +30,9 @@ export const reviewService = {
       }
       // Build prompt
       const joinedReviews = reviews.map((r) => r.content).join('\n\n');
-      const prompt = template.replace('{{reviews}}', joinedReviews);
+      //const prompt = template.replace('{{reviews}}', joinedReviews);
       // 4. Generate summary using LLM
-      const summary = await llmClient.summarize(joinedReviews);
+      const summary = await llmClient.summarizeReviews(joinedReviews);
       // 5. Store summary for caching
       await reviewRepository.storeReviewSummary(productId, summary);
       return summary;
