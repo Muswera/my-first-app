@@ -33,6 +33,7 @@ server/ # API + AI logic
 ### AI Summary
 
 ![Summary](./screenshots/summary.png)
+_AI-generated summary of user reviews_
 
 To install dependencies:
 
