@@ -24,6 +24,16 @@ server/ # API + AI logic
 
 # my-first-app
 
+## 📸 Demo
+
+### Reviews Page
+
+![Reviews](./screenshots/reviews.png)
+
+### AI Summary
+
+![Summary](./screenshots/summary.png)
+
 To install dependencies:
 
 ```bash
