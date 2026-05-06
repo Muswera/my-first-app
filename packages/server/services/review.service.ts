@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { type Review } from '@prisma/client';
 import { reviewRepository } from '../repositories/review.repository.ts';
-import { llmClient } from '../llm/client';
+import { llmClient } from '../llm/client.ts';
 
 console.log('REPO KEYS:', Object.keys(reviewRepository));
 

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import prisma from '../prisma';
+import prisma from '../prismaClient.ts';
 import type { Review } from '@prisma/client';
 
 console.log('LOADED review.repository.ts');
@@ -28,8 +28,6 @@ export const reviewRepository = {
       });
    },
    getReviewSummary(productId: number) {
-      return prisma.summary.findUnique({
-         where: { productId },
-      });
+      return prisma.summary.findUnique({ where: { productId } });
    },
 };

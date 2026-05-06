@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { chatService } from '../services/chat.service';
+import { chatService } from '../services/chat.service.ts';
 import z from 'zod';
 
 //implementation detail

@@ -1,7 +1,11 @@
+import { fileURLToPath } from 'url';
 import fs from 'fs';
 import path from 'path';
-import { conversationRespository } from '../repositories/conversation.repository';
-import { llmClient } from '../llm/client';
+import { conversationRespository } from '../repositories/conversation.repository.ts';
+import { llmClient } from '../llm/client.ts';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const template = fs.readFileSync(
    path.join(__dirname, '..', 'llm', 'prompts', 'chatbot.txt'),
@@ -31,9 +35,9 @@ export const chatService = {
          temperature: 0.2,
          maxTokens: 200,
          previousResponseId:
-            conversationRespository.getLastResponseId(conversationId),
+            conversationRepository.getLastResponseId(conversationId),
       });
-      conversationRespository.setLastResponseId(conversationId, response.id);
+      conversationRepository.setLastResponseId(conversationId, response.id);
       return {
          id: response.id,
          message: response.text,

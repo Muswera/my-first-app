@@ -1,7 +1,7 @@
 //Implementation detail
 const converstions = new Map<string, string>();
 
-export const conversationRespository = {
+export const conversationRepository = {
    getLastResponseId(conversationId: string) {
       return converstions.get(conversationId);
    },

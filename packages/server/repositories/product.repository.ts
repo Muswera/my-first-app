@@ -1,4 +1,4 @@
-import prisma from '../prisma';
+import prisma from '../prismaClient.ts';
 
 export const productRepository = {
    getProduct(productId: number) {
