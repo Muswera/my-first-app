@@ -42,7 +42,7 @@ export const reviewController = {
          if (!product) {
             return res.status(404).json({ error: 'Invalid product' });
          }
-         const reviews = await reviewRepository.getReviews(productId, 1);
+         const reviews = await reviewRepository.getReviews(productId);
          if (!reviews.length) {
             res.status(400).json({
                error: 'There are no reviews to summarize',

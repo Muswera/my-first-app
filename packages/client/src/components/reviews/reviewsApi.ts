@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+const api = axios.create({
+   baseURL: API_URL,
+});
+
 export type Review = {
    id: number;
    author: string;
@@ -24,12 +30,12 @@ export type SummarizeResponse = {
 
 export const reviewsApi = {
    async fetchReviews(productId: number): Promise<GetReviewsResponse> {
-      return axios
-         .get<GetReviewsResponse>(`/api/products/${productId}/reviews`)
+      return api
+         .get(`/api/products/${productId}/reviews`)
          .then((res) => res.data);
    },
    async SummarizeReviews(productId: number) {
-      return axios
+      return api
          .post<SummarizeResponse>(
             `/api/products/${productId}/reviews/summarize`
          )

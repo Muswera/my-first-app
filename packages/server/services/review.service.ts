@@ -20,11 +20,11 @@ export const reviewService = {
       const existingSummary =
          await reviewRepository.getReviewSummary(productId);
       if (existingSummary && existingSummary.expiresAt > new Date()) {
-         console.log('Returning catched summary');
+         console.log('Returning cached summary');
          return existingSummary.content;
       }
       // 2.Fetch for latest reviews
-      const reviews = await reviewRepository.getReviews(productId, 10);
+      const reviews = await reviewRepository.getReviews(productId);
       if (!reviews.length) {
          throw new Error('No reviews available to summarize');
       }
