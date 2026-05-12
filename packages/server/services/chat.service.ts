@@ -1,8 +1,8 @@
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import path from 'path';
-import { conversationRespository } from '../repositories/conversation.repository.ts';
-import { llmClient } from '../llm/client.ts';
+import { conversationRepository } from '../repositories/conversation.repository.js';
+import { llmClient } from '../llm/client.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
