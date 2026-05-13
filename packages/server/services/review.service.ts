@@ -1,10 +1,14 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { type Review } from '@prisma/client';
 import { reviewRepository } from '../repositories/review.repository.js';
 import { llmClient } from '../llm/client.js';
 
 console.log('REPO KEYS:', Object.keys(reviewRepository));
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const template = fs.readFileSync(
    path.join(__dirname, '..', 'llm', 'prompts', 'summarize-reviews.txt'),
