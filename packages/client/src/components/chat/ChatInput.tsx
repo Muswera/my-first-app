@@ -1,5 +1,3 @@
-import React from 'react';
-import type { KeyboardEvent } from 'react';
 import { Button } from '../ui/button';
 import { FaArrowUp } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
@@ -19,7 +17,7 @@ const ChatInput = ({ onSubmit }: Props) => {
       onSubmit(data);
    });
 
-   const onKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
+   const onKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
       if (e.key === 'Enter' && !e.shiftKey) {
          e.preventDefault();
          submit();
