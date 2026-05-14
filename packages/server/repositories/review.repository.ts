@@ -1,11 +1,10 @@
 import dayjs from 'dayjs';
 import prisma from '../prismaClient.js';
-import type { Review } from '@prisma/client';
 
 console.log('LOADED review.repository.js');
 
 export const reviewRepository = {
-   async getReviews(productId: number, limit?: number): Promise<Review[]> {
+   async getReviews(productId: number, limit?: number): Promise<any[]> {
       return prisma.review.findMany({
          where: { productId },
          orderBy: { createdAt: 'desc' },

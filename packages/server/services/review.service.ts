@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { type Review } from '@prisma/client';
 import { reviewRepository } from '../repositories/review.repository.js';
 import { llmClient } from '../llm/client.js';
 
@@ -16,19 +15,22 @@ const template = fs.readFileSync(
 );
 
 export const reviewService = {
-   async getReviews(productId: number): Promise<Review[]> {
+   async getReviews(productId: number) {
       return reviewRepository.getReviews(productId);
    },
    async summarizeReviews(productId: number): Promise<string> {
       //1. check for existing catched summary
       const existingSummary =
          await reviewRepository.getReviewSummary(productId);
+
       if (existingSummary && existingSummary.expiresAt > new Date()) {
          console.log('Returning cached summary');
          return existingSummary.content;
       }
       // 2.Fetch for latest reviews
-      const reviews = await reviewRepository.getReviews(productId);
+      const reviews: { content: string }[] =
+         await reviewRepository.getReviews(productId);
+
       if (!reviews.length) {
          throw new Error('No reviews available to summarize');
       }

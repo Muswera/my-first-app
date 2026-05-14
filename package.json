@@ -5,7 +5,10 @@
    "private": true,
    "scripts": {
       "dev": "bun run index.ts",
-      "format": "prettier --write ."
+      "format": "prettier --write .",
+      "build:client": "npm run build --prefix packages/client",
+      "build:server": "npm run build --prefix packages/server",
+      "build": "npm run build:server && npm run build:client"
    },
    "devDependencies": {
       "@types/bun": "latest",
