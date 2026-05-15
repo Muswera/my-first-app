@@ -94,4 +94,4 @@ npm run dev
 
 ### Ai Summary Feature
 
-![Summmary Demo](./screenshots/summary.png)
+![Summary Demo](./screenshots/summary.png)
