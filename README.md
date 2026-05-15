@@ -17,6 +17,7 @@ https://my-first-app-one-opal.vercel.app/
 ## Tech Stack
 
 ### Frontend
+
 - React
 - TypeScript
 - Vite
@@ -24,12 +25,14 @@ https://my-first-app-one-opal.vercel.app/
 - Tailwind CSS
 
 ### Backend
+
 - Node.js
 - Express.js
 - Prisma ORM
 - MySQL
 
 ### Deployment
+
 - Vercel (Frontend)
 - Render (Backend)
 
@@ -82,3 +85,13 @@ npm run dev
 
 - Frontend deployed on Vercel
 - Backend deployed on Render
+
+## Screenshots
+
+### Home Page
+
+![Home Page] (./screenshots/reviews.png)
+
+### Ai Summary Feature
+
+![Summmary Demo] (./screenshots/summary.png)
