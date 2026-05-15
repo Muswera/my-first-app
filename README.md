@@ -1,50 +1,84 @@
-# AI Review Summarizer App
+# AI Review Summarizer
 
-A full-stack web application that allows users to view product reviews and generate AI-powered summaries using modern LLM APIs.
+A full-stack web application that summarizes customer product reviews using AI.
 
-## 🚀 Features
+## Live Demo
 
-- View product reviews
-- Generate AI summaries of all reviews
-- Expand/collapse summary UI
-- Clean, responsive interface
+https://my-first-app-one-opal.vercel.app/
 
-## 🧠 Tech Stack
+## Features
 
-- Frontend: React + TypeScript + React Query
-- Backend: Node.js (Bun)
-- APIs: OpenAI, Hugging Face Inference
-- Styling: Tailwind CSS
+- View customer reviews
+- Generate AI-powered summaries
+- Cached summaries for faster performance
+- REST API backend
+- Responsive frontend UI
 
-## 📂 Project Structure
+## Tech Stack
 
+### Frontend
+- React
+- TypeScript
+- Vite
+- Axios
+- Tailwind CSS
+
+### Backend
+- Node.js
+- Express.js
+- Prisma ORM
+- MySQL
+
+### Deployment
+- Vercel (Frontend)
+- Render (Backend)
+
+## Project Structure
+
+```bash
 packages/
-client/ # React frontend
-server/ # API + AI logic
-
-# my-first-app
-
-## 📸 Demo
-
-### Reviews Page
-
-![Reviews](./screenshots/reviews.png)
-
-### AI Summary
-
-![Summary](./screenshots/summary.png)
-_AI-generated summary of user reviews_
-
-To install dependencies:
-
-```bash
-bun install
+  client/   # Frontend
+  server/   # Backend
 ```
 
-To run:
+## Environment Variables
 
-```bash
-bun run index.ts
+### Frontend
+
+```env
+VITE_API_URL=your_render_backend_url
 ```
 
-This project was created using `bun init` in bun v1.2.22. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+### Backend
+
+```env
+DATABASE_URL=your_database_url
+OPENAI_API_KEY=your_api_key
+```
+
+## Running Locally
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Start backend
+
+```bash
+cd packages/server
+npm run dev
+```
+
+### Start frontend
+
+```bash
+cd packages/client
+npm run dev
+```
+
+## Production Deployment
+
+- Frontend deployed on Vercel
+- Backend deployed on Render
