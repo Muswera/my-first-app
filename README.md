@@ -90,8 +90,8 @@ npm run dev
 
 ### Home Page
 
-![Home Page] (./screenshots/reviews.png)
+![Home Page](./screenshots/reviews.png)
 
 ### Ai Summary Feature
 
-![Summmary Demo] (./screenshots/summary.png)
+![Summmary Demo](./screenshots/summary.png)
