@@ -95,3 +95,7 @@ npm run dev
 ### Ai Summary Feature
 
 ![Summary Demo](./screenshots/summary.png)
+
+### Architecture Diagram
+
+![Diagram](./screenshots/architecture-diagram.png)
