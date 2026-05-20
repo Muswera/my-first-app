@@ -8,7 +8,8 @@
       "format": "prettier --write .",
       "build:client": "npm run build --prefix packages/client",
       "build:server": "npm run build --prefix packages/server",
-      "build": "npm run build:server && npm run build:client"
+      "build": "npm run build:server && npm run build:client",
+      "postinstall": "prisma generate --schema=packages/server/prisma/schema.prisma"
    },
    "devDependencies": {
       "@types/bun": "latest",
